@@ -1,0 +1,20 @@
+{
+  "name": "mewlix-highlight",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "kbmackenzie <kelly.a.betty@gmail.com>",
+  "license": "GPL-3.0-only",
+  "description": "",
+  "devDependencies": {
+    "@types/highlightjs": "^9.12.6",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "highlight.js": "^11.10.0"
+  }
+}
