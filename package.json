@@ -4,6 +4,7 @@
   "private": true,
   "main": "./dist/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,7 +12,6 @@
   "license": "GPL-3.0-only",
   "description": "",
   "devDependencies": {
-    "@types/highlightjs": "^9.12.6",
     "typescript": "^5.5.4"
   },
   "dependencies": {
