@@ -54,7 +54,7 @@ create_html() {
 start_server() {
   log_message 'Running test server...'
   SERVER_LOG='./test/build/server-log.log'
-  npx http-server './test/build/run/' > "$SERVER_LOG" 2>&1
+  npx http-server './test/build/run/' -o > "$SERVER_LOG" 2>&1
 }
 
 # Run all:
