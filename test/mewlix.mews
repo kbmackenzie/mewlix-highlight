@@ -1,0 +1,313 @@
+-- mewlix: all basic operations
+yarn ball test.basic
+
+-- numbers:
+2 + 2 * 2 / 2 // 2
+2 + 2.25
+1.000006 + 2e12
+(2 + 2) / 2
+2 * (+2 + -2)
++2 - -2
+-2 + +2
+2 + 2 / 2 ^ 2
+
+-- booleans:
+not true
+true or false
+true and false
+true nor false
+true nand false
+
+-- conditionals:
+mew x = true
+"x" if x else "not x"
+
+-- equality:
+2 == 3
+2 != 3
+
+-- ordering:
+2 < 3
+2 > 3
+2 >= 4
+2 <= 4
+
+-- inspect type of value:
+type of x
+-- mewlix: boxes!
+yarn ball test.box
+
+-- Box literal:
+mew charlie = 📦 [
+  name: "Charlie",
+  coat: "tabby",
+  hobbies: ["eating", "sleeping"]
+]
+
+-- Property lookup:
+meow "Name: " .. charlie.name
+meow "Hobbies: " .. charlie["hobbies"]
+-- mewlix: cat trees!
+yarn ball cat_tree
+
+-- Cat trees are like 'enums' in C-family languages!
+cat tree Colors
+  Pink
+  Red
+  Orange
+  Yellow
+  Green
+  Cyen
+  Magenta
+~meow
+
+-- Look up constants:
+meow Colors.Pink
+
+-- Get string key for a constant:
+meow Colors.Pink.key
+
+-- Get numeric value for a constant:
+meow Colors.Pink.value
+-- mewlix: clowders!
+yarn ball test.clowders
+
+-- A simple clowder:
+clowder Cat
+  🐱 wake(name)
+    home.name = name
+  ~meow
+
+  🐱 introduction()
+    bring "meow, i'm " .. home.name
+  ~meow
+~meow
+
+-- A subclowder:
+clowder Charlie is Cat
+  🐱 wake()
+    look outside("charlie")
+  ~meow
+
+  =^.x.^= introduction()
+    bring outside.introduction()
+  ~meow
+~meow
+
+-- Instantiation:
+mew charlie = new Charlie()
+assert charlie is Cat
+
+-- Method calls:
+meow charlie.introduction()
+meow charlie["introduction"]()
+
+-- Instantiation (alternative syntax):
+mew another_cat = new Cat <- "not charlie"
+-- mewlix: comment types
+yarn ball test.comments
+
+-- line comment
+
+~( ^.x.^)> 
+  Block comment!
+<(^.x.^ )~
+
+~( ^.x.^)> This is okay too! <(^.x.^ )~
+
+-- Nesting! ~( ^.x.^)>
+
+~( ^.x.^)> -- More nesting! <(^.x.^ )~
+-- mewlix: function tests
+yarn ball test.functions
+
+🐱 sum(a, b)
+  bring a + b
+~meow
+
+-- Same as:
+🐱 sum_(a, b); bring a + b; ~meow
+
+-- Lambdas work too:
+mew sum! = 🐈 (a, b) -> a + b
+
+mew f = 🐈 (x) -> x
+mew g = 🐈 (x) -> x
+mew h = 🐈 (x) -> x
+
+-- Function composition!
+f :> g
+f :> g :> h
+
+-- Function application!
+x |> f
+x |> f |> g |> h
+
+-- Calls!
+sum(1, 2)
+do sum <- 1, 2
+
+-- Currying!
+mew curried  = 🐈 (a) -> 🐈 (b) -> 🐈 (c) -> [a, b, c]
+mew curried_ = 🐈 (a)
+  -> 🐈 (b)
+  -> 🐈 (c)
+  -> 🐈 (d)
+  -> 🐈 (e) -> [a, b, c, d, e]
+
+-- Box binding!
+mew operations = 📦 []
+
+🐱 [operations.sum](a, b)
+  bring a + b
+~meow
+
+-- Void function:
+🐱 void_()
+~meow
+
+-- Stylish lambdas:
+mew sum1 = 🐈 (a, b) ->
+  a + b
+
+mew sum2 = 🐈 (a, b)
+  -> a + b
+
+-- Early return (no value):
+🐱 print_is_even(n)
+  look if n % 2 == 0
+    meow "Number is even"
+    run away -- Same as 'bring nothing'!
+  ~meow
+  meow "Number is odd"
+~meow
+-- mewlix: imports
+yarn ball test.imports
+
+-- A simple import:
+takes example
+
+-- Alias:
+takes example as ex
+
+-- Importing fields:
+from std takes map, filter, fold
+
+-- Public fields:
+mew pub = "This is public!"
+
+-- Private fields:
+mew _priv = "This is private and won't be exported!"
+-- mewlix: shelves!
+yarn ball test.shelf
+
+-- Shelf literal:
+mew kitties! = ["Charlie", "Jake", "Princess"]
+
+-- Length:
+meow "Kitty count: " .. kitties...?
+
+-- Shelf operations:
+"Scourge" push kitties
+paw at kitties
+knock over kitties
+
+-- See if value is in a shelf. Note: O(n)!
+assert "Charlie" in kitties
+-- mewlix: assorted statements!
+yarn ball test.statements
+
+-- Binding:
+mew x = std.random()
+
+-- If/else if/else:
+look if x == 0
+  meow "extremely unlikely."
+or if x == 1
+  meow "impossible by design."
+else just
+  meow "hello! this is the most common case by a very, very, very big margin!"
+~meow
+
+-- White loops:
+stare while true 
+  meow ":3"
+  escape
+  meow "This will never run!"
+~meow
+
+-- For-each loops:
+mew numbers! = [1, 2, 3]
+
+chase after number in numbers!!!
+  meow number
+  catnap
+  meow "This will never run!"
+~meow
+
+-- Assertions:
+assert 2 == 2
+
+-- Errors:
+explode "hello c:"
+
+-- Try/Catch:
+watch
+  explode "!!"
+pounce on error
+  meow :3"Caught: [error]!"
+  rethrow
+~meow
+-- mewlix: strings!
+yarn ball test.string
+
+-- String literal:
+meow "hello world!"
+meow 'single quotes are okay too!'
+
+-- Multiline string:
+meow """
+this is a multiline string!
+"""
+
+meow '''
+once again, single quotes are okay too!
+'''
+
+-- Yarn strings (string interpolation):
+:3"Your number is [std.random_int(0, 10)]!"
+:3"Yarn strings with no expressions are valid, too!"
+:3"[do std.repeat <- 100, 🐈 () -> meow "... miaou"]"
+
+:3'And, again, single quotes are okay too!'
+:3'Your number is... [std.random_int(0, 10)]!'
+:3'[do std.repeat <- 100, 🐈 () -> meow "... miaou"]'
+
+-- Escape sequences:
+"In double quotes, you need to escape... double quotes. \"Like this\"!"
+'Similarly, in single quotes, escape single quotes, \'like this\'!'
+
+"""
+The single-quote and double-quote rules apply to multiline strings and yarn strings.
+Double-quote multine strings with escape double quotes. (\")
+"""
+
+'''
+... And single-quote multiline strings escape single quotes. (\')
+'''
+
+:3"In yarn strings, escape \[square brackets\] too!"
+-- mewlix: values and bindings
+yarn ball test.variables
+
+-- constants:
+mew PI! = 3.14159265358
+
+-- variables:
+mew x = PI
+x = x + 1  -- mutable!
+
+-- empty declarations:
+mew empty            -- initialized as 'nothing'.
+mew empty_ = nothing -- same thing!
+assert empty == empty_
