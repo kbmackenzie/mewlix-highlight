@@ -42,7 +42,7 @@ create_html() {
 
 # Start development server.
 start_server() {
-  npx alive-server './test/build/run/'
+  npx http-server './test/build/run/'
 }
 
 # Run all:
