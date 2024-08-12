@@ -42,7 +42,8 @@ create_html() {
 
 # Start development server.
 start_server() {
-  npx http-server './test/build/run/'
+  SERVER_LOG='./test/build/server-log.log'
+  npx http-server './test/build/run/' > "$SERVER_LOG" 2>&1
 }
 
 # Run all:
