@@ -1,5 +1,63 @@
 import type { LanguageFn, Mode } from 'highlight.js';
-import { simpleKeywords, specialKeywords, operators } from '@/keyword';
+
+const keywords: string[] = [
+  'meow',
+  'do',
+  'listen',
+  'catnap',
+  'bring',
+  'mew',
+  'assert',
+  'explode',
+  'rethrow',
+  'escape',
+  'takes',
+  'as',
+  'from',
+  'yarnball',
+  'watch',
+];
+
+const keywordPatterns: RegExp[] = [
+  /run away/,
+  /cat tree/,
+  /look outside/,
+  /or if/,
+  /else just/,
+  /stare while/,
+  /chase after/,
+  /catch a/,
+  /yarn ball/,
+  /pounce on/,
+];
+
+const operators: string[] = [
+  'and',
+  'not',
+  'push',
+  'is',
+  'new',
+  'if',
+  'else',
+  'or',
+  'in',
+];
+
+const operatorPatterns: RegExp[] = [
+  /knock over/,
+  /paw at/,
+  /claw at/,
+  /type of/,
+  /and/,
+  /not/,
+  /push/,
+  /is/,
+  /new/,
+  /if/,
+  /else/,
+  /or/,
+  /in/,
+];
 
 const identifiers: Mode[] = [
   {
@@ -13,29 +71,6 @@ const identifiers: Mode[] = [
   {
     scope: 'variable.language',
     keywords: ['home', 'outside'],
-  },
-  {
-    scope: 'variable.constant',
-    keywords: ['std', 'console', 'graphic'],
-  },
-  {
-    scope: 'property',
-    match: /\b[a-z_][a-zA-Z_0-9]+:/,
-  },
-];
-
-const prims: Mode[] = [
-  {
-    scope: 'number',
-    match: /\b\d+(?:\.\d+)?(?:e\d+)?/,
-  },
-  {
-    scope: 'literal',
-    keywords: [
-      'true',
-      'false',
-      'nothing',
-    ],
   },
 ];
 
@@ -52,14 +87,43 @@ const strings: Mode[] = [
   }
 ];
 
-export const mewlix: LanguageFn = (_) => ({
+const primitives: Mode[] = [
+  {
+    scope: 'number',
+    match: /\b\d+(?:\.\d+)?(?:e\d+)?/,
+  },
+];
+
+export const mewlix: LanguageFn = ({ regex }) => ({
   name: 'mewlix',
-  keywords: simpleKeywords,
+  keywords: keywords,
+  literal: 'true false nothing',
+  built_in: 'std console graphic curry',
   contains: [
-    ...identifiers,
-    ...prims,
-    ...strings,
-    ...operators,
-    ...specialKeywords,
+    {
+      scope: 'keyword',
+      relevance: 10,
+      variants: [
+        { match: /=\^\.x\.\^=/ },
+        { match: /=\^oxo\^=/   },
+        { match: /=\^\-x\-\^=/ },
+      ],
+    },
+    {
+      scope: 'operator',
+      match: regex.concat(
+        /\b/,
+        regex.either(...operatorPatterns),
+        /\b/,
+      ),
+    },
+    {
+      scope: 'keyword',
+      match: regex.concat(
+        /\b/,
+        regex.either(...keywordPatterns),
+        /\b/,
+      ),
+    },
   ],
 });
