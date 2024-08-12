@@ -1,12 +1,24 @@
-import type { LanguageFn, Mode } from 'highlight.js';
+import type { HLJSApi, LanguageFn, Mode } from 'highlight.js';
+
+const comments = (hljs: HLJSApi): Mode[] => {
+  const lineComment  = hljs.COMMENT(/--/, /$/);
+  const blockComment = hljs.COMMENT(
+    /~\( \^\.x\.\^\)>/,
+    /<\(\^\.x\.\^ \)~/,
+    { contains: ['self'], relevance: 10 },
+  );
+  return [lineComment, blockComment];
+};
 
 const keywords: string[] = [
   'meow',
   'do',
+  'home',
   'listen',
   'catnap',
   'bring',
   'mew',
+  'outside',
   'assert',
   'explode',
   'rethrow',
@@ -31,16 +43,7 @@ const keywordPatterns: RegExp[] = [
   /pounce on/,
 ];
 
-const operators: string[] = [
-  'and',
-  'not',
-  'push',
-  'is',
-  'new',
-  'if',
-  'else',
-  'or',
-  'in',
+const operators: RegExp[] = [
 ];
 
 const operatorPatterns: RegExp[] = [
@@ -54,52 +57,48 @@ const operatorPatterns: RegExp[] = [
   /is/,
   /new/,
   /if/,
-  /else/,
-  /or/,
+  /else(?!\s*just)/,
+  /or(?!\s*if)/,
   /in/,
 ];
 
 const identifiers: Mode[] = [
   {
-    scope: 'title.function',
-    match: /\b[a-z_][a-zA-Z_0-9]+\(/,
-  },
-  {
     scope: 'title.class',
-    match: /\b[A-Z_][a-zA-Z_0-9]+/,
-  },
-  {
-    scope: 'variable.language',
-    keywords: ['home', 'outside'],
+    match: /\b[A-Z_][a-zA-Z_0-9]+\b/,
   },
 ];
 
-const strings: Mode[] = [
-  {
-    scope: 'string',
-    contains: ['self'],
-    variants: [
-      { begin: /\"{1,3}/, end: /\"{1,3}/, },
-      { begin: /\'{1,3}/, end: /\'{1,3}/, },
-      { begin: ':3"'    , end: '"',  relevance: 10 },
-      { begin: ':3\''   , end: '\'', relevance: 10 },
-    ],
-  }
-];
+const strings = (hljs: HLJSApi): Mode => ({
+  scope: 'string',
+  contains: [hljs.BACKSLASH_ESCAPE],
+  variants: [
+    { begin: /"/, end: /"/, },
+    { begin: /'/, end: /'/, },
+    { begin: /:3"/ , end: /"/, relevance: 10 },
+    { begin: /:3'/ , end: /'/, relevance: 10 },
+    { begin: /"""/ , end: /"""/, },
+    { begin: /'''/ , end: /'''/, },
+  ],
+});
 
-const primitives: Mode[] = [
-  {
-    scope: 'number',
-    match: /\b\d+(?:\.\d+)?(?:e\d+)?/,
-  },
-];
+const number: Mode = {
+  scope: 'number',
+  match: /\b\d+(?:\.\d+)?(?:e\d+)?\b/,
+};
 
-export const mewlix: LanguageFn = ({ regex }) => ({
+export const mewlix: LanguageFn = (hljs) => ({
   name: 'mewlix',
-  keywords: keywords,
-  literal: 'true false nothing',
-  built_in: 'std console graphic curry',
+  keywords: {
+    keyword: keywords,
+    literal: 'true false nothing',
+    built_in: 'std console graphic curry',
+  },
   contains: [
+    number,
+    strings(hljs),
+    ...comments(hljs),
+    ...identifiers,
     {
       scope: 'keyword',
       relevance: 10,
@@ -110,18 +109,18 @@ export const mewlix: LanguageFn = ({ regex }) => ({
       ],
     },
     {
-      scope: 'operator',
-      match: regex.concat(
+      scope: 'keyword',
+      match: hljs.regex.concat(
         /\b/,
-        regex.either(...operatorPatterns),
+        hljs.regex.either(...keywordPatterns),
         /\b/,
       ),
     },
     {
-      scope: 'keyword',
-      match: regex.concat(
+      scope: 'operator',
+      match: hljs.regex.concat(
         /\b/,
-        regex.either(...keywordPatterns),
+        hljs.regex.either(...operatorPatterns),
         /\b/,
       ),
     },
