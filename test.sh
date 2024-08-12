@@ -23,18 +23,25 @@ compile() {
   npx tsc -p "$TEST_CONFIG" && npx tsc-alias -fp "$TEST_CONFIG"
 }
 
+# Generate HTML snippet by running test script:
+generate_snippet() {
+  MEWLIX_INPUT="$(realpath './test/mewlix.mews')"
+  node "$TEST_SCRIPT" "$MEWLIX_INPUT"
+}
+
 # Create HTML from script and write it to watched file.
 create_html() {
-  HTML_SNIPPET=$(node "$TEST_SCRIPT") || return $?
+  HTML_SNIPPET=$(generate_snippet) || return $?
   HTML_FILE='./test/build/run/index.html'
 
   mkdir -p "$(dirname "$HTML_FILE")"
   touch "$HTML_FILE"
 
   HTML_CONTENT="
+  <!doctype html>
   <html>
     <head>$STYLESHEET</head>
-    <body>$HTML_SNIPPET</body>
+    <body><pre><code>$HTML_SNIPPET</code></pre></body>
   </html>
   "
   echo "$HTML_CONTENT" > "$HTML_FILE"
@@ -44,7 +51,7 @@ create_html() {
 start_server() {
   log_message 'Running test server...'
   SERVER_LOG='./test/build/server-log.log'
-  npx http-server './test/build/run/' -o > "$SERVER_LOG" 2>&1
+  npx http-server './test/build/run/' > "$SERVER_LOG" 2>&1
 }
 
 # Run all:
