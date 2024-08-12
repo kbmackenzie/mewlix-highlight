@@ -14,6 +14,7 @@ const keywords: string[] = [
   'meow',
   'do',
   'home',
+  'clowder',
   'listen',
   'catnap',
   'bring',
@@ -64,8 +65,16 @@ const operatorPatterns: RegExp[] = [
 
 const identifiers: Mode[] = [
   {
+    scope: 'title.function',
+    match: /\b[a-zA-Z_0-9]+\b(?=\()/,
+  },
+  {
+    scope: 'title.function',
+    match: /\b[a-zA-Z0-9_]+\b(?=\s*<-)/,
+  },
+  {
     scope: 'title.class',
-    match: /\b[A-Z_][a-zA-Z_0-9]+\b/,
+    match: /\b[A-Z_][a-zA-Z_0-9]*\b/,
   },
 ];
 
