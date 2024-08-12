@@ -6,7 +6,7 @@ mkdir -p './test/build'
 TEST_CONFIG='./tsconfig.test.json'
 TEST_SCRIPT='./test/build/compile/test/html.js'
 
-STYLESHEET='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/default.min.css">'
+STYLESHEET='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css">'
 
 # Write a log message to stdout.
 log_message() {
@@ -40,7 +40,10 @@ create_html() {
   HTML_CONTENT="
   <!doctype html>
   <html>
-    <head>$STYLESHEET</head>
+    <head>
+      $STYLESHEET
+      <style>body { background-color: #121212; color: #fff; }</style>
+    </head>
     <body><pre><code>$HTML_SNIPPET</code></pre></body>
   </html>
   "
