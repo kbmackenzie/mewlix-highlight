@@ -44,7 +44,10 @@ const keywordPatterns: RegExp[] = [
   /pounce on/,
 ];
 
-const operators: RegExp = /[+\-/\*\%\<\>\=\!\:\|\.\?]/;
+const operators: RegExp[] = [
+  /[+\-/\*\%\<\>\=\!\:\|]/,
+  /\.\.(?:\.\?)?/,
+];
 
 const operatorPatterns: RegExp[] = [
   /knock over/,
@@ -128,7 +131,7 @@ export const mewlix: LanguageFn = (hljs) => ({
     },
     {
       scope: 'operator',
-      match: operators,
+      match: hljs.regex.either(...operators),
     },
     {
       scope: 'operator',
