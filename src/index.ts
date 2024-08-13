@@ -34,9 +34,10 @@ const keywords: string[] = [
 const keywordPatterns: RegExp[] = [
   /run away/,
   /cat tree/,
+  /pounce when/,
+  /or when/,
+  /else hiss/,
   /look outside/,
-  /or if/,
-  /else just/,
   /stare while/,
   /chase after/,
   /catch a/,
