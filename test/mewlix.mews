@@ -175,7 +175,7 @@ mew sum2 = 🐈 (a, b)
 
 -- Early return (no value):
 🐱 print_is_even(n)
-  look if n % 2 == 0
+  pounce when n % 2 == 0
     meow "Number is even"
     run away -- Same as 'bring nothing'!
   ~meow
@@ -221,11 +221,11 @@ yarn ball test.statements
 mew x = std.random()
 
 -- If/else if/else:
-look if x == 0
+pounce when x == 0
   meow "extremely unlikely."
-or if x == 1
+or when x == 1
   meow "impossible by design."
-else just
+else hiss
   meow "hello! this is the most common case by a very, very, very big margin!"
 ~meow
 
