@@ -4,6 +4,7 @@
   "private": true,
   "main": "./dist/index.js",
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc -p tsconfig.build.json && tsc-alias -fp tsconfig.build.json",
     "test": "./test.sh",
     "clean": "rm -rf ./dist && rm -rf ./test/build"
