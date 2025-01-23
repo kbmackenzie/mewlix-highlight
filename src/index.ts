@@ -46,7 +46,7 @@ const keywordPatterns: RegExp[] = [
 ];
 
 const operators: RegExp[] = [
-  /[+\-/\*\%\<\>\=\!\:\|]/,
+  /[+\-/\*\%\^\<\>\=\!\:\|]/,
   /\.\.(?:\.\?)?/,
 ];
 
