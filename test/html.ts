@@ -1,4 +1,4 @@
-import { mewlix } from '@/index';
+import { mewlix } from '../src/index.js';
 import hljs from 'highlight.js';
 import fs from 'fs/promises';
 
