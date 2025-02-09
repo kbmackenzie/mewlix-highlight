@@ -10,7 +10,7 @@ const comments = (hljs: HLJSApi): Mode[] => {
   return [lineComment, blockComment];
 };
 
-const keywords: string[] = [
+const keywordConstants: string[] = [
   'meow',
   'do',
   'home',
@@ -45,7 +45,7 @@ const keywordPatterns: RegExp[] = [
   /pounce on/,
 ];
 
-const operators: RegExp[] = [
+const operatorSymbols: RegExp[] = [
   /[+\-/\*\%\^\<\>\=\!\:\|]/,
   /\.\.(?:\.\?)?/,
 ];
@@ -93,8 +93,6 @@ const strings = (hljs: HLJSApi): Mode => ({
   variants: [
     { begin: /"/, end: /"/, },
     { begin: /'/, end: /'/, },
-    { begin: /:3"/ , end: /"/, relevance: 10 },
-    { begin: /:3'/ , end: /'/, relevance: 10 },
     { begin: /"""/ , end: /"""/, },
     { begin: /'''/ , end: /'''/, },
   ],
@@ -105,46 +103,77 @@ const number: Mode = {
   match: /\b\d+(?:\.\d+)?(?:e\d+)?\b/,
 };
 
-export const mewlix: LanguageFn = (hljs) => ({
-  name: 'mewlix',
-  keywords: {
-    keyword: keywords,
-    literal: 'true false nothing',
-    built_in: 'std console graphic curry',
+const operators = (hljs: HLJSApi): Mode[] => [
+  {
+    scope: 'operator',
+    match: hljs.regex.either(...operatorSymbols),
   },
+  {
+    scope: 'operator',
+    match: hljs.regex.concat(
+      /\b/,
+      hljs.regex.either(...operatorPatterns),
+      /\b/,
+    ),
+  },
+];
+
+const keywords = (hljs: HLJSApi): Mode[] => [
+  {
+    scope: 'keyword',
+    relevance: 10,
+    variants: [
+      { match: /=\^\.x\.\^=/ },
+      { match: /=\^oxo\^=/   },
+      { match: /=\^\-x\-\^=/ },
+    ],
+  },
+  {
+    scope: 'keyword',
+    match: hljs.regex.concat(
+      /\b/,
+      hljs.regex.either(...keywordPatterns),
+      /\b/,
+    ),
+  },
+];
+
+const yarnStrings = (contains: Mode[]): Mode => ({
+  scope: 'string',
+  variants: [
+    { begin: /:3"/ , end: /"/, relevance: 10 },
+    { begin: /:3'/ , end: /'/, relevance: 10 },
+  ],
   contains: [
+    {
+      className: 'subst',
+      begin: /\[/,
+      end: /\]/,
+      contains: contains,
+    },
+  ],
+});
+
+export const mewlix: LanguageFn = (hljs) => {
+  const contains: Mode[] = [
     number,
     strings(hljs),
     ...comments(hljs),
     ...identifiers,
-    {
-      scope: 'keyword',
-      relevance: 10,
-      variants: [
-        { match: /=\^\.x\.\^=/ },
-        { match: /=\^oxo\^=/   },
-        { match: /=\^\-x\-\^=/ },
-      ],
+    ...keywords(hljs),
+    ...operators(hljs),
+  ];
+  contains.unshift(
+    yarnStrings(contains),
+  );
+
+  return {
+    name: 'mewlix',
+    keywords: {
+      keyword: keywordConstants,
+      literal: 'true false nothing',
+      built_in: 'std console graphic curry',
     },
-    {
-      scope: 'keyword',
-      match: hljs.regex.concat(
-        /\b/,
-        hljs.regex.either(...keywordPatterns),
-        /\b/,
-      ),
-    },
-    {
-      scope: 'operator',
-      match: hljs.regex.either(...operators),
-    },
-    {
-      scope: 'operator',
-      match: hljs.regex.concat(
-        /\b/,
-        hljs.regex.either(...operatorPatterns),
-        /\b/,
-      ),
-    },
-  ],
-});
+    contains: contains,
+  }
+};
