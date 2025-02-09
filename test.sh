@@ -20,7 +20,7 @@ log_error() {
 
 # Compile test scripts.
 compile() {
-  npx tsc -p "$TEST_CONFIG" && npx tsc-alias -fp "$TEST_CONFIG"
+  npx tsc -p "$TEST_CONFIG"
 }
 
 # Generate HTML snippet by running test script:
