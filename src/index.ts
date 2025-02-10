@@ -180,11 +180,11 @@ function statement(hljs: HLJSApi): Mode[] {
   ];
 
   return [
-    ...expression(hljs),
     {
       scope: 'keyword',
       match: matchWords(hljs, keywords),
     },
+    ...expression(hljs),
   ];
 }
 
