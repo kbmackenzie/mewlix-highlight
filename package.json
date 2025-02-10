@@ -6,10 +6,10 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc -p tsconfig.build.json",
-    "test": "./test.sh",
-    "clean": "rm -rf ./dist && rm -rf ./test/build"
+    "test": "jest",
+    "demo": "node demo/demo.js",
+    "clean": "rm -rf ./dist"
   },
-  "type": "module",
   "keywords": [],
   "author": "kbmackenzie <kelly.a.betty@gmail.com>",
   "license": "GPL-3.0-only",
