@@ -28,7 +28,7 @@ const span = {
     return { scope: 'string', children: [quote, x, quote] };
   },
   literal(x: boolean | string): Span {
-    return { scope: 'string', children: [String(x)] };
+    return { scope: 'literal', children: [String(x)] };
   },
   operator(x: string): Span {
     return { scope: 'operator', children: [x] };
@@ -82,6 +82,18 @@ describe('mewlix syntax highlighting', () => {
           '&quot;',
         ],
       }],
+    },
+    {
+      input: 'a if b else c',
+      expected: ['a ', span.operator('if'), ' b ', span.operator('else'), ' c'],
+    },
+    {
+      input: 'a and b or c',
+      expected: ['a ', span.operator('and'), ' b ', span.operator('or'), ' c'],
+    },
+    {
+      input: 'not true',
+      expected: [span.operator('not'), ' ', span.literal('true')],
     },
   ];
 
