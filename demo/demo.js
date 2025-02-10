@@ -36,7 +36,7 @@ const body = hljs.highlight(
   { language: 'mewlix' },
 ).value;
 
-fs.rmSync(htmlOutput);
+fs.rmSync(htmlOutput, { force: true });
 fs.writeFileSync(
   htmlOutput,
   generateHTML(body),
