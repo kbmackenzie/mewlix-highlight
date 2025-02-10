@@ -85,7 +85,7 @@ describe('mewlix syntax highlighting', () => {
     },
   ];
 
-  test.each(expressions)('expressions', ({ input, expected }) => {
+  test.each(expressions)('expression: %p', ({ input, expected }) => {
     const output = hljs.highlight(input, { language: 'mewlix' }).value;
     const expectation = renderAll(expected);
     expect(output).toBe(expectation);
