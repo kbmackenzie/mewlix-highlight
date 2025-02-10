@@ -1,6 +1,11 @@
-import type { HLJSApi, LanguageFn, Mode } from 'highlight.js';
+import type { HLJSApi, Language, Mode } from 'highlight.js';
 
-const comments = (hljs: HLJSApi): Mode[] => {
+function matchWords(hljs: HLJSApi, words: RegExp[]): string {
+  const regex = hljs.regex;
+  return regex.concat(/\b/, regex.either(...words), /\b/);
+}
+
+function comment(hljs: HLJSApi): Mode[] {
   const lineComment  = hljs.COMMENT(/--/, /$/);
   const blockComment = hljs.COMMENT(
     /~\( \^\.x\.\^\)>/,
@@ -10,116 +15,8 @@ const comments = (hljs: HLJSApi): Mode[] => {
   return [lineComment, blockComment];
 };
 
-const keywordConstants: string[] = [
-  'meow',
-  'do',
-  'home',
-  'clowder',
-  'listen',
-  'catnap',
-  'bring',
-  'mew',
-  'outside',
-  'assert',
-  'explode',
-  'rethrow',
-  'escape',
-  'takes',
-  'as',
-  'from',
-  'yarnball',
-  'watch',
-];
-
-const keywordPatterns: RegExp[] = [
-  /run away/,
-  /cat tree/,
-  /pounce when/,
-  /or when/,
-  /else hiss/,
-  /look outside/,
-  /stare while/,
-  /chase after/,
-  /catch a/,
-  /yarn ball/,
-  /pounce on/,
-];
-
-const operatorSymbols: RegExp[] = [
-  /[+\-/\*\%\^\<\>\=\!\:\|]/,
-  /\.\.(?:\.\?)?/,
-];
-
-const operatorPatterns: RegExp[] = [
-  /knock over/,
-  /paw at/,
-  /claw at/,
-  /type of/,
-  /and/,
-  /not/,
-  /nand/,
-  /nor/,
-  /push/,
-  /is/,
-  /new/,
-  /if/,
-  /else(?!\s*just)/,
-  /or(?!\s*if)/,
-  /in/,
-];
-
-const identifiers: Mode[] = [
-  {
-    scope: 'title.function',
-    match: /\b_*[a-zA-Z][a-zA-Z_0-9]*\b(?=\()/,
-  },
-  {
-    scope: 'title.function',
-    match: /\b_*[a-zA-Z][a-zA-Z0-9_]*\b(?=\s*<-)/,
-  },
-  {
-    scope: 'title.class',
-    match: /\b_*[A-Z][a-zA-Z_0-9]*\b/,
-  },
-  {
-    scope: 'property',
-    match: /\.\b_*[a-zA-Z][a-zA-Z_0-9]*\b/,
-  },
-];
-
-const strings = (hljs: HLJSApi): Mode => ({
-  scope: 'string',
-  contains: [hljs.BACKSLASH_ESCAPE],
-  variants: [
-    { begin: /"/, end: /"/, },
-    { begin: /'/, end: /'/, },
-    { begin: /"""/ , end: /"""/, },
-    { begin: /'''/ , end: /'''/, },
-  ],
-});
-
-const number: Mode = {
-  scope: 'number',
-  match: /\b\d+(?:\.\d+)?(?:e\d+)?\b/,
-};
-
-const operators = (hljs: HLJSApi): Mode[] => [
-  {
-    scope: 'operator',
-    match: hljs.regex.either(...operatorSymbols),
-  },
-  {
-    scope: 'operator',
-    match: hljs.regex.concat(
-      /\b/,
-      hljs.regex.either(...operatorPatterns),
-      /\b/,
-    ),
-  },
-];
-
-const keywords = (hljs: HLJSApi): Mode[] => [
-  {
+function expression(hljs: HLJSApi): Mode[] {
+  const cats: Mode = {
     scope: 'keyword',
     relevance: 10,
     variants: [
@@ -127,53 +24,173 @@ const keywords = (hljs: HLJSApi): Mode[] => [
       { match: /=\^oxo\^=/   },
       { match: /=\^\-x\-\^=/ },
     ],
-  },
-  {
-    scope: 'keyword',
-    match: hljs.regex.concat(
-      /\b/,
-      hljs.regex.either(...keywordPatterns),
-      /\b/,
-    ),
-  },
-];
+  };
 
-const yarnStrings = (contains: Mode[]): Mode => ({
-  scope: 'string',
-  variants: [
-    { begin: /:3"/ , end: /"/, relevance: 10 },
-    { begin: /:3'/ , end: /'/, relevance: 10 },
-  ],
-  contains: [
+  const number: Mode = {
+    scope: 'number',
+    match: /\b\d+(?:\.\d+)?(?:e\d+)?\b/,
+  };
+
+  const string: Mode = {
+    scope: 'string',
+    contains: [hljs.BACKSLASH_ESCAPE],
+    variants: [
+      { begin: /"/, end: /"/, },
+      { begin: /'/, end: /'/, },
+      { begin: /"""/ , end: /"""/, },
+      { begin: /'''/ , end: /'''/, },
+    ],
+  };
+
+  const yarnStrings: Mode = {
+    scope: 'string',
+    contains: [hljs.BACKSLASH_ESCAPE],
+    variants: [
+      { begin: /:3"/ , end: /"/, relevance: 10 },
+      { begin: /:3'/ , end: /'/, relevance: 10 },
+    ],
+  };
+
+  const identifiers: Mode[] = [
     {
-      className: 'subst',
-      begin: /\[/,
-      end: /\]/,
-      contains: contains,
+      scope: 'title.function',
+      match: /\b_*[a-zA-Z][a-zA-Z_0-9]*\b(?=\()/,
     },
-  ],
-});
-
-export const mewlix: LanguageFn = (hljs) => {
-  const contains: Mode[] = [
-    number,
-    strings(hljs),
-    ...comments(hljs),
-    ...identifiers,
-    ...keywords(hljs),
-    ...operators(hljs),
+    {
+      scope: 'title.function',
+      match: /\b_*[a-zA-Z][a-zA-Z0-9_]*\b(?=\s*<-)/,
+    },
+    {
+      scope: 'title.class',
+      match: /\b_*[A-Z][a-zA-Z_0-9]*\b/,
+    },
+    {
+      scope: 'property',
+      match: /\.\b_*[a-zA-Z][a-zA-Z_0-9]*\b/,
+    },
   ];
-  contains.unshift(
-    yarnStrings(contains),
-  );
 
+  const literals: RegExp[] = [
+    /true/,
+    /false/,
+    /nothing/,
+  ];
+
+  const builtIns: RegExp[] = [
+    /std/,
+    /graphic/,
+    /console/,
+    /curry/,
+  ];
+
+  const operatorSymbols: RegExp[] = [
+    /[+\-/\*\%\^\<\>\=\!\:\|]/,
+    /\.\.(?:\.\?)?/,
+  ];
+
+  const expressionKeywords: RegExp[] = [
+    /meow/,
+    /do/,
+    /home/,
+    /outside/,
+  ];
+
+  const operatorKeywords: RegExp[] = [
+    /knock over/,
+    /paw at/,
+    /claw at/,
+    /type of/,
+    /and/,
+    /not/,
+    /nand/,
+    /nor/,
+    /push/,
+    /is/,
+    /new/,
+    /if/,
+    /else(?!\s*just)/,
+    /or(?!\s*if)/,
+    /in/,
+  ];
+
+  const expression: Mode[] = [
+    cats,
+    number,
+    string,
+    yarnStrings,
+    cats,
+    ...identifiers,
+    ...comment(hljs),
+    {
+      scope: 'literal',
+      match: matchWords(hljs, literals)
+    },
+    {
+      scope: 'built_in',
+      match: matchWords(hljs, builtIns),
+    },
+    {
+      scope: 'keyword',
+      match: matchWords(hljs, expressionKeywords),
+    },
+    {
+      scope: 'operator',
+      match: hljs.regex.either(...operatorSymbols),
+    },
+    {
+      scope: 'operator',
+      match: matchWords(hljs, operatorKeywords),
+    },
+  ];
+
+  yarnStrings.contains!.push({
+    scope: 'subst',
+    begin: /\[/,
+    end: /\]/,
+    contains: expression,
+  });
+  return expression;
+}
+
+function statement(hljs: HLJSApi): Mode[] {
+  const keywords: RegExp[] = [
+    /clowder/,
+    /catnap/,
+    /bring/,
+    /mew/,
+    /assert/,
+    /explode/,
+    /rethrow/,
+    /escape/,
+    /takes/,
+    /as/,
+    /from/,
+    /run away/,
+    /cat tree/,
+    /pounce when/,
+    /or when/,
+    /else hiss/,
+    /look outside/,
+    /stare while/,
+    /chase after/,
+    /yarnball/,
+    /yarn ball/,
+    /watch/,
+    /pounce on/,
+  ];
+
+  return [
+    ...expression(hljs),
+    {
+      scope: 'keyword',
+      match: matchWords(hljs, keywords),
+    },
+  ];
+}
+
+export function mewlix(hljs: HLJSApi): Language {
   return {
     name: 'mewlix',
-    keywords: {
-      keyword: keywordConstants,
-      literal: 'true false nothing',
-      built_in: 'std console graphic curry',
-    },
-    contains: contains,
+    contains: statement(hljs),
   }
-};
+}
