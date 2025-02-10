@@ -1,16 +1,19 @@
 {
-  "name": "mewlix-highlight",
+  "name": "mewlix",
   "version": "1.0.0",
-  "private": true,
   "main": "./dist/index.js",
   "scripts": {
-    "prepare": "npm run build",
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "demo": "node demo/demo.js",
     "clean": "rm -rf ./dist"
   },
-  "keywords": [],
+  "keywords": [
+    "mewlix",
+    "esolang",
+    "highlight.js",
+    "highlightjs"
+  ],
   "author": "kbmackenzie <kelly.a.betty@gmail.com>",
   "license": "GPL-3.0-only",
   "files": [
@@ -18,7 +21,7 @@
     "LICENSE",
     "README.md"
   ],
-  "description": "",
+  "description": "Mewlix syntax highlighter definition for Highlight.js",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.2.0",
