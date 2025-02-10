@@ -1,8 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "module": "commonjs",
     "rootDir": ".",
-    "outDir": "./test/build/compile"
+    "outDir": ".dev"
   },
   "include": ["./src/**/*.ts", "./test/**/*.ts"]
 }
