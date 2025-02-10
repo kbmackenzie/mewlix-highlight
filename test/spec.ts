@@ -52,6 +52,23 @@ describe('mewlix syntax highlighting', () => {
       expected: [span.string('a'), ' ', span.operator('..'), ' ', span.string('b')],
     },
     {
+      input: 'a push b',
+      expected: ['a ', span.operator('push'), ' b'],
+    },
+    {
+      input: 'knock over [4, 3, 1]',
+      expected: [
+        span.operator('knock over'),
+        ' [',
+        span.number(4),
+        ', ',
+        span.number(3),
+        ', ',
+        span.number(1),
+        ']',
+      ]
+    },
+    {
       input: ':3"2 + 2 is [2 + 2]"',
       expected: [{
         scope: 'string',
